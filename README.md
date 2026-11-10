@@ -1,27 +1,21 @@
-# UniFlow – University Management System
+نظام إدارة الجامعات
+UniFlow هو نموذج أولي لنظام إدارة جامعي يعمل عبر الويب، يهدف إلى توفير تجربة رقمية حديثة ومنظمة لطلاب الجامعات.
+يركز المشروع حاليًا على بوابة الطالب (Student Portal)، ويتم تطويره كمشروع تعليمي باستخدام تقنيات تطوير الواجهات الأمامية (Front-End).
 
-UniFlow is a web-based university management system prototype designed to provide a modern and organized digital experience for university students.
+✨ المميزات الحالية
+واجهة تسجيل دخول للطلاب لأغراض العرض والتجربة.
+لوحة تحكم خاصة بالطالب.
+تصميم منظم لعرض المعلومات والخدمات الجامعية.
+تصميم متجاوب يتناسب مع مختلف أحجام الشاشات.
+ملاحظة: المشروع لا يزال قيد التطوير. الإصدار الحالي يركز على واجهة الطالب فقط، ولا يتضمن بوابات الدكاترة والإدارة أو خدمات الخادم الخلفية (Backend) أو الربط بقواعد البيانات.
 
-The project is currently focused on the **Student Portal**. It is being developed as a learning project using front-end web technologies.
+🛠️ التقنيات المستخدمة
+HTML5
+CSS3
+JavaScript
 
-## ✨ Current Features
 
-- Student login interface for demonstration purposes.
-- Student dashboard interface.
-- Organized layout for university-related information.
-- Responsive design elements for different screen sizes.
-
-> **Note:** UniFlow is a work in progress. The current version focuses on the student interface. Doctor and administration portals, backend services, and database integration are not included yet.
-
-## 🛠️ Technologies
-
-- HTML5
-- CSS3
-- JavaScript
-
-## 📁 Project Structure
-
-```text
+📁 هيكل المشروع
 UniFlow/
 ├── css/
 ├── font/
@@ -29,30 +23,26 @@ UniFlow/
 ├── js/
 ├── index.html
 └── student.html
-```
 
-## 🚀 Run Locally
+🚀 تشغيل المشروع محليًا
+تحميل المشروع أو استنساخ المستودع (Clone).
+فتح مجلد المشروع.
+فتح ملف index.html باستخدام متصفح الويب.
+لا يحتاج الإصدار الحالي إلى أدوات بناء أو إعدادات إضافية للتشغيل.
 
-1. Download or clone this repository.
-2. Open the project folder.
-3. Open `index.html` in your web browser.
+🔐 ملاحظات أمنية
+هذا الإصدار عبارة عن نموذج تجريبي يعتمد على الواجهة الأمامية فقط، ولا يوفر نظام مصادقة حقيقيًا أو حماية أمنية من جهة الخادم.
+لذلك، يُرجى عدم استخدام بيانات الطلاب الحقيقية أو كلمات المرور الشخصية أثناء تجربة النظام.
 
-No build tools are required for the current front-end prototype.
+🎯 أهداف المشروع
+تطوير المهارات العملية في برمجة واجهات الويب الأمامية.
+بناء بوابة طلابية واضحة وسهلة الاستخدام.
+إنشاء أساس لمنصة متكاملة لإدارة الجامعات مستقبلًا.
+تحسين المشروع وتطويره تدريجيًا من خلال الاختبار وإضافة المميزات.
 
-## 🔐 Security Notice
-
-This version is a front-end demonstration only. It does not provide production-grade authentication or server-side security. Do not use real student information or real passwords.
-
-## 🎯 Project Goals
-
-- Practice front-end development.
-- Build a clear and user-friendly student portal.
-- Develop a foundation for a larger university management platform.
-- Improve the project gradually through testing and future enhancements.
-
-## 📌 Project Status
-
-**In Development** — the student interface is the current focus. More modules and backend functionality may be added in future versions.
+📌 حالة المشروع
+قيد التطوير (In Development)
+يركز العمل حاليًا على تطوير واجهة الطالب، مع إمكانية إضافة المزيد من الأنظمة والخدمات والوظائف الخلفية في الإصدارات المستقبلية.
 
 ## 👨‍💻 Developer
 
