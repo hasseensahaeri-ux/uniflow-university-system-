@@ -2,7 +2,8 @@
   var D = window.UFDATA, $ = function (s) { return document.querySelector(s); };
   var home = $('#homeView'), view = $('#view'), nf = 'all';
   var CAT = { academic: ['أكاديمي', '#1d6be0', '#e4eeff', 'cal'], admin: ['إداري', '#8b5cf6', '#efe7ff', 'file'], finance: ['مالي', '#22a559', '#e1f6e9', 'wallet'] };
-  var DAYS = ['الأحد', 'الاثنين', 'الثلاثاء', 'الأربعاء', 'الخميس', 'الجمعة', 'السبت'];
+  var DAYS = ['الأحد', 'الاثنين', 'الثلاثاء', 'الأربعاء', 'الخميس', 'الجمعة', 'السبت']; // ترتيب JavaScript (0=الأحد)
+  var SDAYS = ['السبت', 'الأحد', 'الاثنين', 'الثلاثاء', 'الأربعاء', 'الخميس']; // ترتيب الجدول الرسمي (0=السبت)
   var demo = '<span class="demo-badge">بيانات تجريبية</span>';
 
   // ---- الإشعارات ----
@@ -31,11 +32,13 @@
   function norm(s) { return String(s).replace(/[\u064B-\u0652\u0640]/g, '').replace(/[أإآ]/g, 'ا').replace(/ى/g, 'ي').replace(/ة/g, 'ه').toLowerCase(); }
   function has(q, ws) { return ws.some(function (w) { return q.indexOf(norm(w)) >= 0; }); }
   function crs(q) { return D.courses.filter(function (c) { return [c.n].concat(c.al).some(function (a) { return q.indexOf(norm(a)) >= 0; }); })[0]; }
+  // تحويل رقم يوم JavaScript (0=الأحد..6=السبت) إلى فهرس الجدول (0=السبت..5=الخميس؛ الجمعة=6 خارج الجدول)
+  function js2s(d) { return d === 6 ? 0 : d + 1; }
   function day(d) {
-    var L = [];
-    D.courses.forEach(function (c) { c.slots.forEach(function (s) { if (s[0] === d) L.push([s[1], s[2], c]); }); });
+    var si = js2s(d), L = [];
+    D.courses.forEach(function (c) { c.slots.forEach(function (s) { if (s[0] === si) L.push([s[1], s[2], c]); }); });
     L.sort(function (a, b) { return a[0] < b[0] ? -1 : 1; });
-    return L.length ? L.map(function (x) { return '• ' + x[2].n + ' (' + x[0] + ' - ' + x[1] + ' · ' + x[2].room + ')'; }).join('\n') : null;
+    return L.length ? L.map(function (x) { return '• ' + x[2].n + ' (' + x[0] + ' - ' + x[1] + ' · ' + x[2].room + ' · ' + x[2].dr + ')'; }).join('\n') : null;
   }
   function ask(raw) {
     var q = norm(raw), c = crs(q), f = D.fees, d = new Date().getDay();
@@ -56,7 +59,10 @@
     }
     if (has(q, ['اشعار'])) return 'لديك ' + badge() + ' إشعارات غير مقروءة. افتح صفحة «الإشعارات» لعرضها.';
     if (has(q, ['جدول', 'محاضر', 'اليوم', 'غدا', 'بكره', 'موعد', 'متي'])) {
-      if (c) { return c.n + ': ' + c.slots.map(function (s) { return DAYS[s[0]] + ' ' + s[1] + ' - ' + s[2]; }).join('، ') + ' في ' + c.room + '.'; }
+      if (c) { return c.n + ': ' + c.slots.map(function (s) { return SDAYS[s[0]] + ' ' + s[1] + ' - ' + s[2]; }).join('، ') + ' في ' + c.room + ' مع ' + c.dr + '.'; }
+      // سؤال عن يوم محدد بالاسم: «ما جدول السبت؟»
+      var dn = [['سبت', 6], ['احد', 0], ['اثنين', 1], ['ثلاثاء', 2], ['اربعاء', 3], ['خميس', 4], ['جمعه', 5]].filter(function (x) { return q.indexOf(x[0]) >= 0; })[0];
+      if (dn) { var Ld = day(dn[1]); return Ld ? 'محاضرات يوم ' + DAYS[dn[1]] + ':\n' + Ld : 'لا توجد محاضرات يوم ' + DAYS[dn[1]] + '.'; }
       var tm = has(q, ['غدا', 'بكره']), dd = tm ? (d + 1) % 7 : d, L = day(dd);
       return L ? 'محاضرات ' + (tm ? 'غد' : 'اليوم') + ' (' + DAYS[dd] + '):\n' + L : 'لا توجد محاضرات ' + (tm ? 'غداً' : 'اليوم') + ' (' + DAYS[dd] + ').';
     }
@@ -66,7 +72,7 @@
   function keep(h) { memChat = h; try { sessionStorage.setItem('uniflow_chat', JSON.stringify(h)); } catch (e) {} }
   function bubble(box, r, t) { var m = document.createElement('div'); m.className = 'msg ' + r; m.textContent = t; box.appendChild(m); box.scrollTop = box.scrollHeight; return m; }
   function vChat() {
-    var S = ['ما جدول اليوم؟', 'ما درجاتي؟', 'كم نسبة حضوري؟', 'كم المتبقي من الرسوم؟', 'من دكتور التشفير؟'];
+    var S = ['ما جدول اليوم؟', 'ما جدول السبت؟', 'ما درجاتي؟', 'كم نسبة حضوري؟', 'كم المتبقي من الرسوم؟', 'من دكتور التشفير؟'];
     view.innerHTML = '<div class="pg-head"><h1>المساعد الذكي ' + demo + '</h1></div><p class="meta">مساعد تجريبي يجيب من بيانات حسابك التجريبية فقط، وليس نموذج ذكاء اصطناعي حقيقياً.</p>' +
       '<div class="chips">' + S.map(function (s) { return '<button data-q="' + s + '">' + s + '</button>'; }).join('') + '</div>' +
       '<div class="panel"><div class="chat" id="chat"></div><div class="send"><input id="chatIn" type="text" placeholder="اكتب سؤالك هنا..." autocomplete="off"><button class="btn-s" data-act="send">إرسال</button></div></div>';
@@ -77,7 +83,7 @@
   }
   function send(text) {
     text = String(text || '').trim(); var box = $('#chat'); if (!text || !box) return;
-    var h = chat(); if (!h.length) h = [['b', 'أهلاً بك في مساعد UniFlow التجريبي. كيف أساعدك اليوم ؟']];
+    var h = chat(); if (!h.length) h = [['b', 'أهلاً بك في مساعد UniFlow التجريبي. كيف أساعدك اليوم؟']];
     bubble(box, 'u', text); h.push(['u', text]);
     var t = bubble(box, 'b t', '…');
     setTimeout(function () {
@@ -111,4 +117,28 @@
   window.addEventListener('hashchange', route);
   window.UFPages = { ask: ask, render: route };
   badge(); route();
+
+  // ---- محاضرات اليوم في الرئيسية (ديناميكية من الجدول الرسمي) ----
+  function renderToday() {
+    var box = document.getElementById('todayLecs');
+    if (!box) return;
+    var now = new Date(), d = now.getDay(), si = js2s(d), mins = now.getHours() * 60 + now.getMinutes(), L = [];
+    if (si < 6) D.courses.forEach(function (c) {
+      c.slots.forEach(function (s) {
+        if (s[0] !== si) return;
+        var st = parseInt(s[1], 10) * 60 + parseInt(s[1].slice(3), 10), en = parseInt(s[2], 10) * 60 + parseInt(s[2].slice(3), 10);
+        L.push([st, en, c]);
+      });
+    });
+    L.sort(function (a, b) { return a[0] - b[0]; });
+    box.innerHTML = L.length ? L.map(function (x) {
+      var st = x[0], en = x[1], c = x[2];
+      var stT = String(Math.floor(st / 60)).padStart(2, '0') + ':' + String(st % 60).padStart(2, '0');
+      var enT = String(Math.floor(en / 60)).padStart(2, '0') + ':' + String(en % 60).padStart(2, '0');
+      var cls = mins >= en ? 'badge f' : mins >= st ? 'badge live' : 'badge';
+      var lbl = mins >= en ? 'انتهت' : mins >= st ? 'جارية الآن' : 'قادمة';
+      return '<div class="lec"><b>' + c.n + '</b><div class="sub"><span><svg><use href="#clock"/></svg><bdi dir="ltr">' + enT + ' - ' + stT + '</bdi></span><span><svg><use href="#pin"/></svg>' + c.room + '</span><span><svg><use href="#user"/></svg>' + c.dr + '</span></div><span class="' + cls + '">' + lbl + '</span></div>';
+    }).join('') : '<p class="empty">لا توجد محاضرات اليوم (' + DAYS[d] + ') 🎉</p>';
+  }
+  renderToday();
 })();

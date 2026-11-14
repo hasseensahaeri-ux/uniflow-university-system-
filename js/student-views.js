@@ -1,6 +1,7 @@
 (function () {
   var D = window.UFDATA, st = { ann: 'الكل', files: 'all' }, C = D.courses;
-  var DAYS = ['الأحد', 'الاثنين', 'الثلاثاء', 'الأربعاء', 'الخميس'];
+  // أيام الجدول الرسمي: يبدأ من السبت والأحد ثاني الأيام (يوم خالٍ)
+  var DAYS = ['السبت', 'الأحد', 'الاثنين', 'الثلاثاء', 'الأربعاء', 'الخميس'];
   var demo = '<span class="demo-badge">بيانات تجريبية</span>';
   var hd = function (t, x) { return '<div class="pg-head"><h1>' + t + ' ' + demo + '</h1>' + (x || '') + '</div>'; };
   var n = function (v) { return v.toLocaleString('ar'); };
@@ -10,22 +11,27 @@
   var pct = function (c) { return Math.round(c.att[0] / c.att[1] * 100); };
   var card = function (h, b) { return '<div class="panel cd">' + h + b + '</div>'; };
   var chips = function (k, L, cur) { return '<div class="chips">' + L.map(function (l) { return '<button data-vf="' + k + '" data-val="' + l[0] + '"' + (l[0] === cur ? ' class="on"' : '') + '>' + l[1] + '</button>'; }).join('') + '</div>'; };
-  var day = new Date().getDay();
+  // تحويل رقم اليوم القادم من الجهاز (0=الأحد .. 6=السبت) إلى فهرس الجدول (0=السبت .. 5=الخميس)
+  var day = (new Date().getDay() + 1) % 7; // الجمعة -> 6 (خارج الجدول، بلا تمييز)
 
   var V = {
     schedule: function () {
-      return hd('الجدول الدراسي') + '<p class="meta">جدولك الأسبوعي للفصل الحالي</p><div class="gr w5">' + DAYS.map(function (nm, i) {
+      var total = 0; C.forEach(function (c) { total += c.slots.length; });
+      var dept = D.dept || { name: 'الأمن السيبراني', level: 'الثاني', term: 'الثاني' };
+      return hd('الجدول الدراسي') +
+        '<p class="meta">جدولك الأسبوعي للفصل الحالي</p>' +
+        '<div class="sch-info"><span class="si"><svg><use href="#cap"/></svg>القسم: ' + dept.name + '</span><span class="si"><svg><use href="#grade"/></svg>المستوى: ' + dept.level + '</span><span class="si"><svg><use href="#cal"/></svg>الفصل: ' + dept.term + '</span><span class="si c">' + total + ' محاضرة أسبوعياً</span></div>' +
+        '<div class="gr w6">' + DAYS.map(function (nm, i) {
         var L = []; C.forEach(function (c) { c.slots.forEach(function (s) { if (s[0] === i) L.push([s, c]); }); });
         L.sort(function (a, b) { return a[0][1] < b[0][1] ? -1 : 1; });
         return '<div class="panel cd' + (i === day ? ' today' : '') + '"><h3>' + nm + (i === day ? ' <em>اليوم</em>' : '') + '</h3>' + (L.map(function (x) {
-          return '<div class="ev"><b>' + x[1].n + '</b><span dir="ltr">' + x[0][1] + ' - ' + x[0][2] + '</span><span>' + x[1].room + '</span></div>';
-        }).join('') || '<p class="empty">لا محاضرات</p>') + '</div>';
+          return '<div class="ev' + (x[1].ty === 'عملي' ? ' lab' : '') + '"><span class="ty">' + x[1].ty + '</span><b>' + x[1].n + '</b><span class="ev-dr"><svg><use href="#user"/></svg>' + x[1].dr + '</span><span dir="ltr"><svg><use href="#clock"/></svg> ' + x[0][1] + ' - ' + x[0][2] + '</span><span><svg><use href="#pin"/></svg>' + x[1].room + '</span></div>';
+        }).join('') || '<p class="empty">لا توجد محاضرات</p>') + '</div>';
       }).join('') + '</div>';
     },
     courses: function () {
-      var h = 0; C.forEach(function (c) { h += c.h || 3; });
-      return hd('المقررات') + '<p class="meta">' + C.length + ' مقررات مسجلة هذا الفصل</p><div class="gr">' + C.map(function (c) {
-        return card('<h3>' + c.n + '</h3>', '<p>' + c.dr + '</p><p>' + c.room + ' · ' + c.slots.map(function (s) { return DAYS[s[0]]; }).join('، ') + '</p><p>درجاتك حتى الآن: <b>' + (c.w[0] + c.w[1]) + ' / 50</b></p><p>الحضور: <b style="color:' + col(pct(c)) + '">' + pct(c) + '%</b></p>');
+      return hd('المقررات') + '<p class="meta">' + C.length + ' محاضرة أسبوعياً (نظري وعملي على حدة) · القسم: ' + (D.dept ? D.dept.name : '') + ' · المستوى ' + (D.dept ? D.dept.level : '') + '</p><div class="gr">' + C.map(function (c) {
+        return card('<h3>' + c.n + ' <span class="ty-chip' + (c.ty === 'عملي' ? ' lab' : '') + '">' + c.ty + '</span></h3>', '<p>' + c.dr + '</p><p>' + c.room + ' · ' + c.slots.map(function (s) { return DAYS[s[0]] + ' ' + s[1] + ' - ' + s[2]; }).join('، ') + '</p><p>درجاتك حتى الآن: <b>' + (c.w[0] + c.w[1]) + ' / 50</b></p><p>الحضور: <b style="color:' + col(pct(c)) + '">' + pct(c) + '%</b></p>');
       }).join('') + '</div>';
     },
     attendance: function () {
@@ -37,8 +43,8 @@
     grades: function () {
       var avg = Math.round(C.reduce(function (s, c) { return s + (c.w[0] + c.w[1]) / 50; }, 0) / C.length * 100);
       return hd('الدرجات والمعدل') + '<div class="gr w3"><div class="panel cd"><span class="meta">المعدل التراكمي</span><div class="big">' + D.gpa + ' / 4.00</div></div><div class="panel cd"><span class="meta">متوسط ما رُصد حتى الآن</span><div class="big">' + avg + '%</div></div><div class="panel cd"><span class="meta">الساعات المنجزة</span><div class="big">' + D.done + ' / ' + D.totalCr + '</div></div></div>' +
-        '<div class="panel wrapx"><table><thead><tr><th>المقرر</th><th>أعمال الفصل /20</th><th>النصفي /30</th><th>النهائي /50</th><th>المجموع حتى الآن</th><th>المطلوب في النهائي للنجاح (60)</th></tr></thead><tbody>' + C.map(function (c) {
-          var s = c.w[0] + c.w[1], need = Math.max(0, 60 - s); return '<tr><td>' + c.n + '</td><td>' + c.w[0] + '</td><td>' + c.w[1] + '</td><td>—</td><td><b>' + s + ' / 50</b></td><td>' + (need > 50 ? 'غير ممكن' : need + ' / 50') + '</td></tr>';
+        '<div class="panel wrapx"><table><thead><tr><th>المقرر</th><th>النوع</th><th>أعمال الفصل /20</th><th>النصفي /30</th><th>النهائي /50</th><th>المجموع حتى الآن</th><th>المطلوب في النهائي للنجاح (60)</th></tr></thead><tbody>' + C.map(function (c) {
+          var s = c.w[0] + c.w[1], need = Math.max(0, 60 - s); return '<tr><td>' + c.n + '</td><td>' + c.ty + '</td><td>' + c.w[0] + '</td><td>' + c.w[1] + '</td><td>—</td><td><b>' + s + ' / 50</b></td><td>' + (need > 50 ? 'غير ممكن' : need + ' / 50') + '</td></tr>';
         }).join('') + '</tbody></table></div><p class="meta">النهائي لم يُرصد بعد. النتائج والمعدل بيانات تجريبية.</p>';
     },
     announcements: function () {
@@ -53,7 +59,7 @@
         '<h3 class="sec">مستندات جامعية</h3><div class="panel">' + D.docs.map(function (t) { return '<div class="nit"><span class="ni" style="background:#e1f6e9;color:#22a559"><svg><use href="#file"/></svg></span><p>' + t + '</p><button class="btn-s" data-act="dl">طلب</button></div>'; }).join('') + '</div>';
     },
     instructors: function () {
-      return hd('الدكاترة') + '<div class="gr">' + C.map(function (c) { return card('<h3>' + c.dr + '</h3>', '<p>المقرر: ' + c.n + '</p><p>المكتب والساعات المكتبية: ' + c.office + '</p>'); }).join('') + '</div>';
+      return hd('الدكاترة') + '<div class="gr">' + C.map(function (c) { return card('<h3>' + c.dr + '</h3>', '<p>المقرر: ' + c.n + '</p><p>النوع: ' + c.ty + '</p><p>المكتب والساعات المكتبية: ' + c.office + '</p>'); }).join('') + '</div>';
     },
     fees: function () {
       var f = D.fees, bal = 0, rem = f.total - f.paid, p = Math.round(f.paid / f.total * 100), S = { paid: 'مدفوع', next: 'القسط القادم', later: 'قادم' };
@@ -68,7 +74,7 @@
       var u = {}; try { u = JSON.parse(sessionStorage.getItem('uniflow_user')) || {}; } catch (e) {}
       var th = document.documentElement.dataset.theme, g = (function () { try { return localStorage.getItem('uniflow_gender') || u.gender || ''; } catch (e) { return u.gender || ''; } })();
       var b = function (k, v, t, cur) { return '<button data-' + k + '="' + v + '"' + (cur === v ? ' class="on"' : '') + '>' + t + '</button>'; };
-      return hd('الإعدادات والملف الشخصي') + '<div class="panel"><h3>الملف الشخصي والمعلومات الأكاديمية</h3><div class="kv"><span>الاسم</span><b>' + (u.name || 'حسين عادل') + '</b><span>الرقم الأكاديمي</span><b>' + (u.id || '202400123') + '</b><span>الكلية</span><b>كلية الحاسبات وتقنية المعلومات</b><span>التخصص</span><b>الأمن السيبراني</b><span>المستوى</span><b>الثاني</b><span>الساعات المنجزة</span><b>' + D.done + ' من ' + D.totalCr + '</b><span>المعدل التراكمي</span><b>' + D.gpa + '</b></div></div>' +
+      return hd('الإعدادات والملف الشخصي') + '<div class="panel"><h3>الملف الشخصي والمعلومات الأكاديمية</h3><div class="kv"><span>الاسم</span><b>' + (u.name || 'حسين عادل') + '</b><span>الرقم الأكاديمي</span><b>' + (u.id || '202400123') + '</b><span>الكلية</span><b>كلية الحاسبات وتقنية المعلومات</b><span>التخصص</span><b>' + (D.dept ? D.dept.name : 'الأمن السيبراني') + '</b><span>المستوى</span><b>' + (D.dept ? D.dept.level : 'الثاني') + '</b><span>الفصل</span><b>' + (D.dept ? D.dept.term : 'الثاني') + '</b><span>الساعات المنجزة</span><b>' + D.done + ' من ' + D.totalCr + '</b><span>المعدل التراكمي</span><b>' + D.gpa + '</b></div></div>' +
         '<div class="panel cd2"><h3>الصورة الشخصية</h3><p class="meta">تُحفظ على جهازك فقط.</p><label class="btn-s up">اختيار صورة<input type="file" id="photo" accept="image/*" hidden></label> <button class="btn-s alt" data-act="rmphoto">إزالة الصورة</button><div class="chips">' + b('ge', 'male', 'ذكر', g) + b('ge', 'female', 'أنثى', g) + b('ge', '', 'غير محدد', g) + '</div></div>' +
         '<div class="panel cd2"><h3>المظهر</h3><div class="chips">' + b('th', 'light', '☀️ نهاري', th) + b('th', 'dark', '🌙 ليلي', th) + '</div></div>' +
         '<div class="panel cd2"><h3>الحساب</h3><button class="btn-s" data-act="logout">تسجيل الخروج</button> <button class="btn-s alt" data-act="reset">إعادة ضبط البيانات التجريبية</button></div>';
