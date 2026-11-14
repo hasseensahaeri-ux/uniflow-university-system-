@@ -55,8 +55,8 @@
     files: function () {
       var L = D.files.filter(function (f) { return st.files === 'all' || f.k === st.files; });
       return hd('الملفات والمستندات') + chips('files', [['all', 'الكل']].concat(C.map(function (c) { return [c.k, c.n]; })), st.files) +
-        '<div class="panel">' + L.map(function (f) { var c = C.filter(function (x) { return x.k === f.k; })[0]; return '<div class="nit"><span class="ni" style="background:#efe7ff;color:#8b5cf6;font-size:11px;font-weight:800">' + f.x + '</span><p dir="ltr" style="text-align:right">' + f.t + '<small>' + c.n + ' · ' + f.s + ' · ' + date(f.d) + '</small></p><button class="btn-s" data-act="dl">تحميل</button></div>'; }).join('') + '</div>' +
-        '<h3 class="sec">مستندات جامعية</h3><div class="panel">' + D.docs.map(function (t) { return '<div class="nit"><span class="ni" style="background:#e1f6e9;color:#22a559"><svg><use href="#file"/></svg></span><p>' + t + '</p><button class="btn-s" data-act="dl">طلب</button></div>'; }).join('') + '</div>';
+        '<div class="panel">' + L.map(function (f) { var c = C.filter(function (x) { return x.k === f.k; })[0]; return '<div class="nit file-row"><span class="ni" style="background:#efe7ff;color:#8b5cf6;font-size:11px;font-weight:800">' + f.x + '</span><p dir="ltr" style="text-align:right">' + f.t + '<small>' + c.n + ' · ' + f.s + ' · ' + date(f.d) + '</small></p><button class="btn-s" data-act="dl">تحميل</button></div>'; }).join('') + '</div>' +
+        '<h3 class="sec">مستندات جامعية</h3><div class="panel">' + D.docs.map(function (t) { return '<div class="nit file-row"><span class="ni" style="background:#e1f6e9;color:#22a559"><svg><use href="#file"/></svg></span><p>' + t + '</p><button class="btn-s" data-act="dl">طلب</button></div>'; }).join('') + '</div>';
     },
     instructors: function () {
       return hd('الدكاترة') + '<div class="gr">' + C.map(function (c) { return card('<h3>' + c.dr + '</h3>', '<p>المقرر: ' + c.n + '</p><p>النوع: ' + c.ty + '</p><p>المكتب والساعات المكتبية: ' + c.office + '</p>'); }).join('') + '</div>';
