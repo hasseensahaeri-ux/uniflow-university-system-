@@ -2,23 +2,23 @@
   'use strict';
   var root = document.getElementById('view');
   if (!root) return;
-
   var TYPES = {
-    PDF: { glyph: '<path d="M7 3.75h6.5L19 9.25v10.5A1.25 1.25 0 0 1 17.75 21h-11A1.25 1.25 0 0 1 5.5 19.75v-14A2 2 0 0 1 7.5 3.75Z"/><path d="M13 4v5.5h5.5M8.5 15.5h7M8.5 18h5"/>', cls: 'pdf' },
-    PPT: { glyph: '<rect x="4" y="4" width="16" height="16" rx="2.5"/><path d="M12 4v16M12 8h5M12 12h3M8 9h1.5a1.5 1.5 0 0 1 0 3H8z"/>', cls: 'ppt' },
-    PPTX: { glyph: '<rect x="4" y="4" width="16" height="16" rx="2.5"/><path d="M12 4v16M12 8h5M12 12h3M8 9h1.5a1.5 1.5 0 0 1 0 3H8z"/>', cls: 'ppt' },
-    DOC: { glyph: '<path d="M7 3.75h6.5L19 9.25v10.5A1.25 1.25 0 0 1 17.75 21h-11A1.25 1.25 0 0 1 5.5 19.75v-14A2 2 0 0 1 7.5 3.75Z"/><path d="M13 4v5.5h5.5M8.5 14h7M8.5 17h7"/>', cls: 'doc' },
-    DOCX: { glyph: '<path d="M7 3.75h6.5L19 9.25v10.5A1.25 1.25 0 0 1 17.75 21h-11A1.25 1.25 0 0 1 5.5 19.75v-14A2 2 0 0 1 7.5 3.75Z"/><path d="M13 4v5.5h5.5M8.5 14h7M8.5 17h7"/>', cls: 'doc' },
-    XLS: { glyph: '<rect x="4" y="4" width="16" height="16" rx="2.5"/><path d="M4 10h16M10 10v10M14 10v10M7 7h.01M10 7h.01M14 7h.01"/>', cls: 'xls' },
-    XLSX: { glyph: '<rect x="4" y="4" width="16" height="16" rx="2.5"/><path d="M4 10h16M10 10v10M14 10v10M7 7h.01M10 7h.01M14 7h.01"/>', cls: 'xls' },
-    ZIP: { glyph: '<path d="M7 3.75h6.5L19 9.25v10.5A1.25 1.25 0 0 1 17.75 21h-11A1.25 1.25 0 0 1 5.5 19.75v-14A2 2 0 0 1 7.5 3.75Z"/><path d="M13 4v5.5h5.5M12 10v2m0 2v2m-1 2h2"/>', cls: 'archive' },
-    RAR: { glyph: '<path d="M7 3.75h6.5L19 9.25v10.5A1.25 1.25 0 0 1 17.75 21h-11A1.25 1.25 0 0 1 5.5 19.75v-14A2 2 0 0 1 7.5 3.75Z"/><path d="M13 4v5.5h5.5M12 10v2m0 2v2m-1 2h2"/>', cls: 'archive' },
-    PNG: { glyph: '<rect x="3.5" y="4.5" width="17" height="15" rx="2.5"/><circle cx="9" cy="10" r="1.5"/><path d="m5 17 4.5-4 3 2 2.5-2 4 4"/>', cls: 'image' },
-    JPG: { glyph: '<rect x="3.5" y="4.5" width="17" height="15" rx="2.5"/><circle cx="9" cy="10" r="1.5"/><path d="m5 17 4.5-4 3 2 2.5-2 4 4"/>', cls: 'image' },
-    JPEG: { glyph: '<rect x="3.5" y="4.5" width="17" height="15" rx="2.5"/><circle cx="9" cy="10" r="1.5"/><path d="m5 17 4.5-4 3 2 2.5-2 4 4"/>', cls: 'image' },
-    TXT: { glyph: '<path d="M7 3.75h6.5L19 9.25v10.5A1.25 1.25 0 0 1 17.75 21h-11A1.25 1.25 0 0 1 5.5 19.75v-14A2 2 0 0 1 7.5 3.75Z"/><path d="M13 4v5.5h5.5M8.5 14h7M8.5 17h7"/>', cls: 'text' }
+    PDF:'pdf', PPT:'ppt', PPTX:'ppt', DOC:'doc', DOCX:'doc',
+    XLS:'xls', XLSX:'xls', CSV:'xls', ZIP:'archive', RAR:'archive',
+    PNG:'image', JPG:'image', JPEG:'image', WEBP:'image', TXT:'text'
   };
-
+  function iconMarkup(ext) {
+    var label = (ext || 'FILE').slice(0, 5);
+    return '<svg viewBox="0 0 56 56" aria-hidden="true" focusable="false">' +
+      '<rect x="1" y="1" width="54" height="54" rx="13" class="file-icon-bg"/>' +
+      '<path d="M17 9h14l12 12v23a4 4 0 0 1-4 4H17a4 4 0 0 1-4-4V13a4 4 0 0 1 4-4Z" class="file-icon-shadow"/>' +
+      '<path d="M17 7h14l12 12v23a4 4 0 0 1-4 4H17a4 4 0 0 1-4-4V11a4 4 0 0 1 4-4Z" class="file-icon-paper"/>' +
+      '<path d="M31 7v9a3 3 0 0 0 3 3h9" class="file-icon-fold"/>' +
+      '<rect x="15.5" y="23" width="27" height="12" rx="3" class="file-icon-label"/>' +
+      '<text x="29" y="31.7" text-anchor="middle" class="file-icon-text">' + label + '</text>' +
+      '<path d="M18 39h15M18 42.5h10" class="file-icon-lines"/>' +
+      '</svg>';
+  }
   function decorate() {
     var heading = root.querySelector('.pg-head h1, h1');
     if (!heading || !heading.textContent.includes('الملفات')) return;
@@ -28,15 +28,14 @@
       var badge = row.querySelector('.ni');
       if (!badge || badge.dataset.fileIconReady) return;
       var ext = badge.textContent.trim().toUpperCase().replace(/^\./, '');
-      var type = TYPES[ext] || { glyph: '<path d="M7 3.75h6.5L19 9.25v10.5A1.25 1.25 0 0 1 17.75 21h-11A1.25 1.25 0 0 1 5.5 19.75v-14A2 2 0 0 1 7.5 3.75Z"/><path d="M13 4v5.5h5.5M8.5 14h7M8.5 17h7"/>', cls: 'other' };
-      badge.className = 'ni file-type-icon file-type-' + type.cls;
+      var cls = TYPES[ext] || 'other';
+      badge.className = 'ni file-type-icon file-type-' + cls;
       badge.dataset.fileIconReady = '1';
       badge.setAttribute('role', 'img');
       badge.setAttribute('aria-label', 'ملف بصيغة ' + (ext || 'غير معروفة'));
-      badge.innerHTML = '<svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">' + type.glyph + '</svg><span>' + (ext || 'FILE') + '</span>';
+      badge.innerHTML = iconMarkup(ext);
     });
   }
-
-  new MutationObserver(decorate).observe(root, { childList: true, subtree: true });
+  new MutationObserver(decorate).observe(root, { childList:true, subtree:true });
   decorate();
 })();
