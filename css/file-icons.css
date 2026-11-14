@@ -1,0 +1,35 @@
+/* UniFlow — file type icons */
+#view .ni.file-type-icon {
+  width: 54px !important;
+  height: 62px !important;
+  min-width: 54px;
+  border-radius: 12px !important;
+  display: flex !important;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 1px;
+  border: 1px solid var(--line);
+  font-size: 10px !important;
+  line-height: 1.15;
+  flex: 0 0 54px;
+}
+#view .file-type-emoji { font-size: 25px; line-height: 1.2; }
+#view .file-type-label { font-size: 9px; font-weight: 800; letter-spacing: .35px; }
+#view .file-type-pdf { background: #fff0f0 !important; color: #c62828 !important; border-color: #f4cccc !important; }
+#view .file-type-ppt { background: #fff2e8 !important; color: #c65d16 !important; border-color: #f3d5bd !important; }
+#view .file-type-doc { background: #eaf2ff !important; color: #245bb5 !important; border-color: #cbdcf8 !important; }
+#view .file-type-xls { background: #eaf7ef !important; color: #217346 !important; border-color: #c9e7d2 !important; }
+#view .file-type-archive { background: #f2edff !important; color: #7046a8 !important; border-color: #ddd0f2 !important; }
+#view .file-type-image { background: #fff7df !important; color: #9b6b00 !important; border-color: #f0e1b5 !important; }
+#view .file-type-text, #view .file-type-other { background: var(--bg) !important; color: var(--muted) !important; }
+[data-theme="dark"] #view .file-type-pdf { background: #3a2028 !important; color: #ffaaaa !important; border-color: #63323d !important; }
+[data-theme="dark"] #view .file-type-ppt { background: #3b2b20 !important; color: #ffc08e !important; border-color: #65432e !important; }
+[data-theme="dark"] #view .file-type-doc { background: #1c3152 !important; color: #a9caff !important; border-color: #304c76 !important; }
+[data-theme="dark"] #view .file-type-xls { background: #1d3a2b !important; color: #9cdbb2 !important; border-color: #315d43 !important; }
+[data-theme="dark"] #view .file-type-archive { background: #302543 !important; color: #d0b8ff !important; border-color: #4d3b68 !important; }
+[data-theme="dark"] #view .file-type-image { background: #3a321d !important; color: #f3d27a !important; border-color: #62532b !important; }
+@media (max-width: 600px) {
+  #view .ni.file-type-icon { width: 48px !important; height: 56px !important; min-width: 48px; flex-basis: 48px; }
+  #view .file-type-emoji { font-size: 22px; }
+}
