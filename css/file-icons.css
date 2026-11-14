@@ -1,48 +1,27 @@
-/* UniFlow — refined document type marks */
+/* UniFlow — bold folded-document icons inspired by the supplied reference */
 #view .ni.file-type-icon {
-  width: 48px !important;
-  height: 54px !important;
-  min-width: 48px;
-  flex: 0 0 48px;
-  padding: 5px 3px !important;
-  border: 1px solid transparent;
-  border-radius: 11px !important;
-  display: flex !important;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  gap: 2px;
-  font-family: inherit;
-  line-height: 1;
-  box-shadow: inset 0 1px 0 rgba(255,255,255,.55);
+  width:56px !important; height:56px !important; min-width:56px; flex:0 0 56px;
+  padding:0 !important; border:0 !important; border-radius:13px !important;
+  display:inline-flex !important; align-items:center; justify-content:center;
+  overflow:hidden; background:transparent !important; box-shadow:none !important;
 }
-#view .ni.file-type-icon svg {
-  width: 25px;
-  height: 25px;
-  stroke: currentColor;
-  stroke-width: 1.65;
-  fill: none;
-}
-#view .ni.file-type-icon span {
-  font-size: 8px;
-  line-height: 1;
-  font-weight: 800;
-  letter-spacing: .45px;
-}
-#view .file-type-pdf { background: #fff1f1 !important; color: #d04444 !important; border-color: #f3d8d8 !important; }
-#view .file-type-ppt { background: #fff4eb !important; color: #c66b2b !important; border-color: #f0dfd0 !important; }
-#view .file-type-doc { background: #edf3ff !important; color: #3769bd !important; border-color: #d9e5fa !important; }
-#view .file-type-xls { background: #edf7f0 !important; color: #328354 !important; border-color: #d8eadf !important; }
-#view .file-type-archive { background: #f3effb !important; color: #8061b1 !important; border-color: #e4dcf2 !important; }
-#view .file-type-image { background: #fff8e9 !important; color: #b18128 !important; border-color: #f0e6cf !important; }
-#view .file-type-text, #view .file-type-other { background: var(--bg) !important; color: var(--muted) !important; border-color: var(--line) !important; }
-html[data-theme="dark"] #view .file-type-pdf { background: #39252a !important; color: #ee999f !important; border-color: #55363c !important; }
-html[data-theme="dark"] #view .file-type-ppt { background: #392d23 !important; color: #e8ad7c !important; border-color: #55412f !important; }
-html[data-theme="dark"] #view .file-type-doc { background: #24334b !important; color: #9bbdf2 !important; border-color: #354b6b !important; }
-html[data-theme="dark"] #view .file-type-xls { background: #24382d !important; color: #91c7a4 !important; border-color: #385744 !important; }
-html[data-theme="dark"] #view .file-type-archive { background: #302a40 !important; color: #c0a7e8 !important; border-color: #493d60 !important; }
-html[data-theme="dark"] #view .file-type-image { background: #3a3425 !important; color: #dfc17d !important; border-color: #55492f !important; }
-@media (max-width: 600px) {
-  #view .ni.file-type-icon { width: 44px !important; height: 50px !important; min-width: 44px; flex-basis: 44px; }
-  #view .ni.file-type-icon svg { width: 23px; height: 23px; }
+#view .ni.file-type-icon svg { display:block; width:56px; height:56px; overflow:visible; }
+#view .file-icon-bg { fill:currentColor; }
+#view .file-icon-shadow { fill:rgba(0,0,0,.15); }
+#view .file-icon-paper { fill:#fff; }
+#view .file-icon-fold { fill:#e9edf3; stroke:#e9edf3; stroke-width:1; stroke-linejoin:round; }
+#view .file-icon-label { fill:currentColor; }
+#view .file-icon-text { fill:#fff; font-family:Arial,sans-serif; font-size:7px; font-weight:800; letter-spacing:.15px; }
+#view .file-icon-lines { fill:none; stroke:#e2e6ed; stroke-width:1.7; stroke-linecap:round; }
+#view .file-type-pdf { color:#e52f32 !important; }
+#view .file-type-ppt { color:#e87532 !important; }
+#view .file-type-doc { color:#2874d0 !important; }
+#view .file-type-xls { color:#26965c !important; }
+#view .file-type-archive { color:#8056bd !important; }
+#view .file-type-image { color:#d69a24 !important; }
+#view .file-type-text, #view .file-type-other { color:#687789 !important; }
+@media (max-width:600px) {
+  #view .ni.file-type-icon, #view .ni.file-type-icon svg {
+    width:50px !important; height:50px !important; min-width:50px; flex-basis:50px;
+  }
 }
