@@ -1,27 +1,48 @@
-/* UniFlow — bold folded-document icons inspired by the supplied reference */
+/* UniFlow — file-type document icons, matched to the supplied reference */
 #view .ni.file-type-icon {
-  width:56px !important; height:56px !important; min-width:56px; flex:0 0 56px;
-  padding:0 !important; border:0 !important; border-radius:13px !important;
-  display:inline-flex !important; align-items:center; justify-content:center;
-  overflow:hidden; background:transparent !important; box-shadow:none !important;
+  width:56px !important;
+  height:56px !important;
+  min-width:56px;
+  flex:0 0 56px;
+  padding:0 !important;
+  border:0 !important;
+  border-radius:0 !important;
+  display:inline-flex !important;
+  align-items:center;
+  justify-content:center;
+  overflow:visible;
+  background:transparent !important;
+  box-shadow:none !important;
 }
-#view .ni.file-type-icon svg { display:block; width:56px; height:56px; overflow:visible; }
-#view .file-icon-bg { fill:currentColor; }
-#view .file-icon-shadow { fill:rgba(0,0,0,.15); }
-#view .file-icon-paper { fill:#fff; }
-#view .file-icon-fold { fill:#e9edf3; stroke:#e9edf3; stroke-width:1; stroke-linejoin:round; }
-#view .file-icon-label { fill:currentColor; }
-#view .file-icon-text { fill:#fff; font-family:Arial,sans-serif; font-size:7px; font-weight:800; letter-spacing:.15px; }
-#view .file-icon-lines { fill:none; stroke:#e2e6ed; stroke-width:1.7; stroke-linecap:round; }
+#view .ni.file-type-icon svg {
+  display:block;
+  width:56px;
+  height:56px;
+  overflow:visible;
+}
+#view .file-icon-paper { fill:currentColor; }
+#view .file-icon-fold { fill:rgba(255,255,255,.48); }
+#view .file-icon-text {
+  fill:#fff;
+  font-family:Arial,sans-serif;
+  font-size:8px;
+  font-weight:800;
+  letter-spacing:-.2px;
+}
 #view .file-type-pdf { color:#e52f32 !important; }
-#view .file-type-ppt { color:#e87532 !important; }
-#view .file-type-doc { color:#2874d0 !important; }
-#view .file-type-xls { color:#26965c !important; }
-#view .file-type-archive { color:#8056bd !important; }
+#view .file-type-ppt { color:#f06435 !important; }
+#view .file-type-doc { color:#2878e8 !important; }
+#view .file-type-xls { color:#13b96b !important; }
+#view .file-type-archive { color:#8b68d4 !important; }
 #view .file-type-image { color:#d69a24 !important; }
-#view .file-type-text, #view .file-type-other { color:#687789 !important; }
+#view .file-type-text { color:#7189b9 !important; }
+#view .file-type-other { color:#718096 !important; }
 @media (max-width:600px) {
-  #view .ni.file-type-icon, #view .ni.file-type-icon svg {
-    width:50px !important; height:50px !important; min-width:50px; flex-basis:50px;
+  #view .ni.file-type-icon,
+  #view .ni.file-type-icon svg {
+    width:50px !important;
+    height:50px !important;
+    min-width:50px;
+    flex-basis:50px;
   }
 }
