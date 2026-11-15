@@ -11,7 +11,7 @@
 .warn{background:#fff6e0;color:#7a5200;border-radius:10px;padding:10px 14px;margin-bottom:12px}
 table input.cell{width:76px}
 
-/* تحسينات ترتيب البوابة والاستجابة للأجهزة */
+/* ===== ترتيب الواجهة (يمين←يسار دائماً) ===== */
 html{direction:rtl}
 .top{gap:12px}.tools{flex:none;margin-inline-start:auto}
 .user{min-width:0}.user-info{min-width:0}.user-info b,.user-info small{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}

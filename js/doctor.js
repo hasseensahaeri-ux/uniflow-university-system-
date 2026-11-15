@@ -4,8 +4,13 @@
   var u = null; try { u = JSON.parse(sessionStorage.getItem('uniflow_user') || 'null'); } catch (e) {}
   // حارس واجهة فقط؛ الحماية الحقيقية تتطلب Backend (انظر التقرير)
   if (!u || u.role !== 'doctor') { location.replace('index.html'); return; }
-  var FEMALE = u.gender === 'female', DN = u.name.replace(/^أ\\.\\s*/, '');
-  var GREET = (new Date().getHours() >= 5 && new Date().getHours() < 12) ? 'صباح الخير' : (new Date().getHours() < 17 ? 'طاب يومك' : 'مساء الخير');
+  var FEMALE = u.gender === 'female', DN = u.name.replace(/^أ\.\s*/, '');
+  (function () { // الصورة الشخصية حسب الجنس + الاسم بلا «أ.»
+    var av = document.querySelector('[data-avatar]'), nm = document.querySelector('[data-user-name]');
+    if (nm) nm.textContent = DN;
+    if (av) { av.classList.remove('default'); av.innerHTML = '<img src="images/' + (FEMALE ? 'doctor_female' : 'doctor_male') + '.webp" alt="الصورة الشخصية" style="width:100%;height:100%;object-fit:cover;border-radius:50%;display:block">'; }
+  })();
+  var hr = new Date().getHours(), GREET = hr >= 5 && hr < 12 ? 'صباح الخير' : hr >= 12 && hr < 17 ? 'طاب يومك' : 'مساء الخير';
   var MY = D.courses.filter(function (c) { return c.dr === u.name; });
   var R = function (k) { return (window.UFROSTER || {})[k] || []; };
   var st = { k: MY[0] && MY[0].k, date: new Date().toISOString().slice(0, 10), q: '', chat: null }, files = {};
@@ -38,12 +43,16 @@
       var mine = function (a) { return own(a.k); }, anns = S.ann.filter(mine), ts = S.tasks.filter(mine), nx = nextLec();
       var ps = []; MY.forEach(function (c) { R(c.k).forEach(function (s) { var p = attPct(c.k, s.id); if (p !== null) ps.push(p); }); });
       var avg = ps.length ? Math.round(ps.reduce(function (a, b) { return a + b; }, 0) / ps.length) + '%' : 'لا سجل بعد';
-      var stat = function (t, v, h, c) { return '<a class="stat" href="#/' + h + '"><div class="row"><span class="ico" style="background:' + c + '"><svg><use href="#book"/></svg></span>' + t + '</div><div class="big">' + v + '</div></a>'; };
+      var stat = function (t, v, h, c, ic) { return '<a class="stat" href="#/' + h + '"><div class="row"><span class="ico" style="background:' + c + '"><svg><use href="#' + ic + '"/></svg></span>' + t + '</div><div class="big">' + v + '</div></a>'; };
       return '<h1>' + GREET + '، ' + (FEMALE ? 'دكتورة ' : 'دكتور ') + esc(DN) + ' 👋</h1><p class="meta">الأمن السيبراني · المستوى الثاني · الفصل الثاني ' + (MY.some(function (c) { return !R(c.k).length; }) ? '<span class="demo-badge">بعض المقررات بلا كشف طلاب بعد</span>' : '') + '</p>' +
-        '<section class="stats">' + stat('المقررات', MY.length, 'courses', '#f59e2b') + stat('الطلاب', Object.keys(MY.reduce(function (o, c) { R(c.k).forEach(function (x) { o[x.id] = 1; }); return o; }, {})).length, 'students', '#8b5cf6') + stat('محاضرات الأسبوع', wk, 'schedule', '#1d6be0') + stat('واجبات واختبارات', ts.length, 'tasks', '#22a559') + '</section>' +
-        '<section class="cols"><div class="panel"><div class="ph"><h3>المحاضرة القادمة</h3></div>' + (nx ? '<div class="ev"><b>' + nx.c.n + '</b><span>' + DAYS[nx.s[0]] + ' ' + nx.s[1] + ' - ' + nx.s[2] + '</span><span>' + nx.c.room + '</span></div>' : '<p class="empty">—</p>') + '<div class="ph"><h3>ملخص الحضور</h3></div><p>متوسط الحضور المسجّل: <b>' + avg + '</b></p></div>' +
+        '<section class="stats">' + stat('المقررات', MY.length, 'courses', '#f59e2b', 'book') + stat('الطلاب', Object.keys(MY.reduce(function (o, c) { R(c.k).forEach(function (x) { o[x.id] = 1; }); return o; }, {})).length, 'students', '#8b5cf6', 'users') + stat('محاضرات الأسبوع', wk, 'schedule', '#1d6be0', 'cal') + stat('واجبات واختبارات', ts.length, 'tasks', '#22a559', 'clock') + '</section>' +
+        '<section class="cols"><div class="col-stack"><div class="panel"><div class="ph"><h3>المحاضرة القادمة</h3><a href="#/schedule">الجدول</a></div>' + (nx ? '<div class="ev"><b>' + nx.c.n + '</b><span>' + DAYS[nx.s[0]] + ' ' + nx.s[1] + ' - ' + nx.s[2] + '</span><span>' + nx.c.room + '</span></div>' : '<p class="empty">—</p>') + '</div><div class="panel"><div class="ph"><h3>ملخص الحضور</h3><a href="#/attendance">تسجيل</a></div><p>متوسط الحضور المسجّل: <b>' + avg + '</b></p></div></div>' +
         '<div class="panel"><div class="ph"><h3>أحدث الإعلانات والأنشطة</h3></div>' + (anns.slice(-3).reverse().map(function (a) { return '<div class="nit"><p>' + esc(a.t) + '<small>' + esc(a.cn) + '</small></p><time>' + tm(a.ts) + '</time></div>'; }).join('') || '<p class="empty">لا إعلانات بعد</p>') +
         S.log.filter(mine).slice(-3).reverse().map(function (l) { return '<div class="nit"><p>' + esc(l.t) + '</p><time>' + tm(l.ts) + '</time></div>'; }).join('') + '</div></section>';
+    },
+    more: function () {
+      var L = [['courses', 'book', 'مقرراتي'], ['schedule', 'cal', 'الجدول'], ['lectures', 'file', 'المحاضرات'], ['students', 'users', 'الطلاب'], ['attendance', 'check', 'الحضور'], ['tasks', 'clock', 'الواجبات والاختبارات'], ['grades', 'grade', 'الدرجات'], ['announcements', 'mega', 'الإعلانات'], ['assistant', 'bot', 'المساعد الذكي AI']];
+      return hd('لوحة التحكم') + '<div class="more-grid">' + L.map(function (x) { return '<a class="more-it" href="#/' + x[0] + '"><span class="ico"><svg><use href="#' + x[1] + '"/></svg></span>' + x[2] + '</a>'; }).join('') + '</div><div class="panel" style="margin-top:14px"><a class="more-it out" href="#" data-act="logout2"><span class="ico"><svg><use href="#arr"/></svg></span>تسجيل الخروج</a></div>';
     },
     courses: function () {
       return hd('مقرراتي') + '<div class="gr">' + MY.map(function (c) { return '<div class="panel cd"><h3>' + c.n + ' <span class="ty-chip' + (c.ty === 'عملي' ? ' lab' : '') + '">' + c.ty + '</span></h3><p>المستوى الثاني · الشعبة: غير محددة في البيانات</p><p>عدد الطلاب: ' + R(c.k).length + (R(c.k).length ? '' : ' — لم يُرفع كشف الطلاب بعد') + '</p><p>' + c.room + ' · ' + c.slots.map(function (s) { return DAYS[s[0]] + ' ' + s[1] + '-' + s[2]; }).join('، ') + '</p></div>'; }).join('') + '</div>';
@@ -103,6 +112,7 @@
   document.addEventListener('click', function (e) {
     var go = e.target.closest('[data-go]'); if (go) { location.hash = '#/' + go.dataset.go; return; }
     var b = e.target.closest('[data-act]'); if (!b) return; var a = b.dataset.act, id = b.dataset.id, v = function (n) { var x = $('[data-f=' + n + ']'); return x ? x.value.trim() : ''; };
+    if (a === 'logout2') { e.preventDefault(); sessionStorage.removeItem('uniflow_user'); location.href = 'index.html'; return; }
     if (!own(st.k)) return;
     if (a === 'mark') { var key = st.k + '|' + st.date; (S.att[key] = S.att[key] || {})[id] = b.dataset.v; push({ k: st.k, t: 'تسجيل حضور ' + cn(st.k) }); }
     else if (a === 'addLec') { var f = $('[data-f=lf]').files[0], t = v('lt'); if (!t || !f) { alert('أدخل العنوان واختر ملفاً'); return; } var ext = f.name.split('.').pop().toLowerCase(); if (['pdf', 'ppt', 'pptx', 'docx'].indexOf(ext) < 0) { alert('الصيغة غير مدعومة'); return; } var lid = 'l' + Date.now(); files[lid] = URL.createObjectURL(f); S.lectures.push({ id: lid, k: st.k, t: t, d: v('ld'), x: ext.toUpperCase(), sz: (f.size / 1048576).toFixed(1) + ' MB', ts: Date.now(), pub: false }); }
@@ -123,7 +133,6 @@
   });
   window.addEventListener('hashchange', render);
   document.getElementById('logout').addEventListener('click', function (e) { e.preventDefault(); sessionStorage.removeItem('uniflow_user'); location.href = 'index.html'; });
-  var lb = $('#langBtn'); lb.addEventListener('click', function () { var r = root.dir === 'rtl'; root.dir = r ? 'ltr' : 'rtl'; root.lang = r ? 'en' : 'ar'; lb.textContent = r ? 'ع' : 'EN'; });
   var nb = $('#nb'); var n = S.ann.filter(function (a) { return own(a.k); }).length; if (n) { nb.hidden = false; nb.textContent = n; }
   render();
 })();
