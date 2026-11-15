@@ -5,7 +5,7 @@
     doctor:  { id: '100245',    pass: 'Doctor@123',  name: 'د. خالد' },
     admin:   { id: 'admin01',   pass: 'Admin@123',   name: 'مدير النظام' }
   };
-  var DOCTORS = [{ id: '100001', name: 'أ. لبيب القباطي' },{ id: '100002', name: 'أ. نايف الوتاري' },{ id: '100003', name: 'أ. صادق الحليلي' },{ id: '100004', name: 'صلاح السلامي' },{ id: '100005', name: 'أ. علياء زيارة' },{ id: '100006', name: 'محمد الصبري' },{ id: '100007', name: 'أ. صدام قحطان' },{ id: '100008', name: 'محمد غيلان' },{ id: '100009', name: 'أ. سهام الجعشاني' },{ id: '100010', name: 'أ. ريداء ردمان' }]; // حسابات تجريبية، كلمة المرور Doctor@123
+  var DOCTORS = [{ id: '100001', name: 'أ. لبيب القباطي' },{ id: '100002', name: 'أ. نايف الوتاري' },{ id: '100003', name: 'أ. صادق الحليلي' },{ id: '100004', name: 'صلاح السلامي' },{ id: '100005', name: 'أ. علياء زيارة', gender: 'female' },{ id: '100006', name: 'محمد الصبري' },{ id: '100007', name: 'أ. صدام قحطان' },{ id: '100008', name: 'محمد غيلان' },{ id: '100009', name: 'أ. سهام الجعشاني', gender: 'female' },{ id: '100010', name: 'أ. ريداء ردمان', gender: 'female' }]; // حسابات تجريبية، كلمة المرور Doctor@123
   // حسابات الطلاب من كشف الدفعة. الرقم الأكاديمي هنا مؤقت (2025 + رقم م)، وكلمة المرور التجريبية Student@123
   var FEM = [6, 12, 30, 36, 38, 41]; // م الطالبات (حسب الأسماء): تظهر لهن صورة الفتاة
   var STUDENTS = ((window.UFROSTER && window.UFROSTER.DBP) || []).map(function (s) { var m = +s.id; return { id: m === 10 ? '251109015' : '2025' + ('00000' + m).slice(-5), name: s.n, gender: FEM.indexOf(m) > -1 ? 'female' : 'male' }; });
@@ -86,7 +86,7 @@
 
     var acc = ACCOUNTS[role];
     if (role === 'student') { var sd = STUDENTS.filter(function (x) { return x.id === id; })[0]; if (sd) acc = { id: sd.id, pass: 'Student@123', name: sd.name, gender: sd.gender, locked: true }; }
-    if (role === 'doctor') { var dd = DOCTORS.filter(function (x) { return x.id === id; })[0]; acc = dd ? { id: dd.id, pass: 'Doctor@123', name: dd.name } : { id: '', pass: '', name: '' }; }
+    if (role === 'doctor') { var dd = DOCTORS.filter(function (x) { return x.id === id; })[0]; acc = dd ? { id: dd.id, pass: 'Doctor@123', name: dd.name, gender: dd.gender || 'male' } : { id: '', pass: '', name: '' }; }
 
     if (id === acc.id && pass === acc.pass) {
       try {
