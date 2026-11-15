@@ -10,3 +10,30 @@
 .msg.u{background:#2563eb;color:#fff;align-self:flex-start}.msg.b{background:var(--bg);align-self:flex-end}.msg.e{background:#fde8ec;color:#b3162f;align-self:stretch;max-width:100%}
 .warn{background:#fff6e0;color:#7a5200;border-radius:10px;padding:10px 14px;margin-bottom:12px}
 table input.cell{width:76px}
+
+/* تحسينات ترتيب البوابة والاستجابة للأجهزة */
+html{direction:rtl}
+.top{gap:12px}.tools{flex:none;margin-inline-start:auto}
+.user{min-width:0}.user-info{min-width:0}.user-info b,.user-info small{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.col-stack{display:flex;flex-direction:column;gap:14px}
+.stat .big{font-size:30px;line-height:1}
+.stat .ico{width:44px;height:44px;border-radius:12px;display:grid;place-items:center;color:#fff;flex:none}.stat .ico svg{width:22px;height:22px;stroke:#fff;fill:none;stroke-width:1.8}
+.panel+.panel{margin-top:0}.panel.cd{margin-bottom:14px}
+.sec{margin:22px 0 10px}
+.btn-p,.btn-s,.btn-d{display:inline-flex;align-items:center;justify-content:center;line-height:1.2;min-height:40px}
+.wrapx{overflow-x:auto}.wrapx table{min-width:520px}
+.more-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:12px;margin-top:12px}
+.more-it{display:flex;align-items:center;gap:12px;background:var(--card);border-radius:14px;padding:14px;color:var(--ink);text-decoration:none;font-weight:700;font-size:14px;box-shadow:var(--shadow)}
+.more-it .ico{width:38px;height:38px;border-radius:10px;background:#e4eeff;color:#1d4ed8;display:grid;place-items:center;flex:none}
+.more-it .ico svg{width:20px;height:20px;stroke:currentColor;fill:none;stroke-width:1.8}
+.more-it.out{box-shadow:none;padding:0}.more-it.out .ico{background:#fde8ec;color:#e0364f}
+@media (max-width:900px){
+  .top{flex-wrap:nowrap;padding:10px 12px}.tools{flex:none;order:0;gap:8px}.bell{width:40px;height:40px}
+  .user .av{width:40px;height:40px}
+  main{padding-bottom:96px}
+  .bn{justify-content:space-between;padding-inline:6px}.bn a{flex:1;min-width:0;font-size:11px;padding:2px 0}.bn svg{width:22px;height:22px}
+  .stats{gap:10px}.stat{padding:14px}.stat .row{font-size:14px}.stat .big{font-size:26px}
+  .fm{grid-template-columns:1fr}.fm button{width:100%}
+  .chat{height:52vh}
+}
+@media (min-width:901px){.more-grid{grid-template-columns:repeat(3,1fr)}}
