@@ -4,6 +4,8 @@
   var u = null; try { u = JSON.parse(sessionStorage.getItem('uniflow_user') || 'null'); } catch (e) {}
   // حارس واجهة فقط؛ الحماية الحقيقية تتطلب Backend (انظر التقرير)
   if (!u || u.role !== 'doctor') { location.replace('index.html'); return; }
+  var FEMALE = u.gender === 'female', DN = u.name.replace(/^أ\\.\\s*/, '');
+  var GREET = (new Date().getHours() >= 5 && new Date().getHours() < 12) ? 'صباح الخير' : (new Date().getHours() < 17 ? 'طاب يومك' : 'مساء الخير');
   var MY = D.courses.filter(function (c) { return c.dr === u.name; });
   var R = function (k) { return (window.UFROSTER || {})[k] || []; };
   var st = { k: MY[0] && MY[0].k, date: new Date().toISOString().slice(0, 10), q: '', chat: null }, files = {};
@@ -37,7 +39,7 @@
       var ps = []; MY.forEach(function (c) { R(c.k).forEach(function (s) { var p = attPct(c.k, s.id); if (p !== null) ps.push(p); }); });
       var avg = ps.length ? Math.round(ps.reduce(function (a, b) { return a + b; }, 0) / ps.length) + '%' : 'لا سجل بعد';
       var stat = function (t, v, h, c) { return '<a class="stat" href="#/' + h + '"><div class="row"><span class="ico" style="background:' + c + '"><svg><use href="#book"/></svg></span>' + t + '</div><div class="big">' + v + '</div></a>'; };
-      return '<h1>مرحباً دكتور، ' + esc(u.name) + ' 👋</h1><p class="meta">الأمن السيبراني · المستوى الثاني · الفصل الثاني ' + (MY.some(function (c) { return !R(c.k).length; }) ? '<span class="demo-badge">بعض المقررات بلا كشف طلاب بعد</span>' : '') + '</p>' +
+      return '<h1>' + GREET + '، ' + (FEMALE ? 'دكتورة ' : 'دكتور ') + esc(DN) + ' 👋</h1><p class="meta">الأمن السيبراني · المستوى الثاني · الفصل الثاني ' + (MY.some(function (c) { return !R(c.k).length; }) ? '<span class="demo-badge">بعض المقررات بلا كشف طلاب بعد</span>' : '') + '</p>' +
         '<section class="stats">' + stat('المقررات', MY.length, 'courses', '#f59e2b') + stat('الطلاب', Object.keys(MY.reduce(function (o, c) { R(c.k).forEach(function (x) { o[x.id] = 1; }); return o; }, {})).length, 'students', '#8b5cf6') + stat('محاضرات الأسبوع', wk, 'schedule', '#1d6be0') + stat('واجبات واختبارات', ts.length, 'tasks', '#22a559') + '</section>' +
         '<section class="cols"><div class="panel"><div class="ph"><h3>المحاضرة القادمة</h3></div>' + (nx ? '<div class="ev"><b>' + nx.c.n + '</b><span>' + DAYS[nx.s[0]] + ' ' + nx.s[1] + ' - ' + nx.s[2] + '</span><span>' + nx.c.room + '</span></div>' : '<p class="empty">—</p>') + '<div class="ph"><h3>ملخص الحضور</h3></div><p>متوسط الحضور المسجّل: <b>' + avg + '</b></p></div>' +
         '<div class="panel"><div class="ph"><h3>أحدث الإعلانات والأنشطة</h3></div>' + (anns.slice(-3).reverse().map(function (a) { return '<div class="nit"><p>' + esc(a.t) + '<small>' + esc(a.cn) + '</small></p><time>' + tm(a.ts) + '</time></div>'; }).join('') || '<p class="empty">لا إعلانات بعد</p>') +
