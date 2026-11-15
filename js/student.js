@@ -37,7 +37,7 @@
   }
 
   // الصورة الشخصية: مخصصة (u.avatar) ثم حسب الجنس، وإلا صورة رمزية عامة
-  var AVATARS = { male: 'images/student_male.webp', female: 'images/student_female.webp' };
+  var AVATARS = { male: './images/student_male.webp?v=2', female: './images/student_female.webp?v=2' };
   var DEFAULT_AVATAR = '<svg class="av-default" viewBox="0 0 40 40" aria-hidden="true">' +
     '<circle cx="20" cy="15" r="7"/><path d="M5 40c0-9 6.7-14 15-14s15 5 15 14z"/></svg>';
   var av = document.querySelector('[data-avatar]');
