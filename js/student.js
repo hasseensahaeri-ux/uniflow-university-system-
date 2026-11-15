@@ -47,8 +47,8 @@
       av.innerHTML = DEFAULT_AVATAR;
     };
     var ls = function (k) { try { return localStorage.getItem(k); } catch (e) { return null; } };
-    var gen = ls('uniflow_gender'); if (gen === null) gen = u && u.gender;
-    var src = (u && u.avatar) || ls('uniflow_avatar') || AVATARS[gen] || '';
+    var gen = (u && u.locked) ? u.gender : ls('uniflow_gender'); if (gen === null) gen = u && u.gender;
+    var src = (u && u.locked) ? (AVATARS[gen] || '') : ((u && u.avatar) || ls('uniflow_avatar') || AVATARS[gen] || '');
     var img = av.querySelector('img');
     if (!src || !img) {
       showDefault();

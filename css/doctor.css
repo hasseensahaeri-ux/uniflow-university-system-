@@ -1,0 +1,12 @@
+.brand small{font-size:11px;background:#2563eb;color:#fff;border-radius:6px;padding:1px 6px;margin-inline-start:6px}
+.fm{display:grid;gap:10px;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));margin-bottom:12px}
+.fm input,.fm select,.fm textarea,.cell{font:inherit;padding:9px 11px;border:1px solid var(--line);border-radius:10px;background:var(--card);color:var(--ink);width:100%}
+.btn-p{background:#2563eb;color:#fff;border:0;border-radius:10px;padding:9px 16px;font:inherit;font-weight:700;cursor:pointer}
+.btn-p:disabled{opacity:.5}.btn-d{background:#fde8ec;color:#e0364f;border:0;border-radius:8px;padding:5px 10px;cursor:pointer;font:inherit}
+.seg button{border:1px solid var(--line);background:var(--card);color:var(--ink);padding:5px 12px;border-radius:8px;font:inherit;cursor:pointer;margin-inline-end:4px}
+.seg button.on{background:#2563eb;color:#fff;border-color:#2563eb}
+.chat{height:46vh;overflow:auto;padding:12px;display:flex;flex-direction:column;gap:8px}
+.msg{max-width:85%;padding:9px 13px;border-radius:12px;white-space:pre-wrap;line-height:1.7}
+.msg.u{background:#2563eb;color:#fff;align-self:flex-start}.msg.b{background:var(--bg);align-self:flex-end}.msg.e{background:#fde8ec;color:#b3162f;align-self:stretch;max-width:100%}
+.warn{background:#fff6e0;color:#7a5200;border-radius:10px;padding:10px 14px;margin-bottom:12px}
+table input.cell{width:76px}

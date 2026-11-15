@@ -1,5 +1,5 @@
 (function () {
-  var D = window.UFDATA, st = { ann: 'الكل', files: 'all' }, C = D.courses;
+  var D = window.UFDATA; try { var SH = JSON.parse(localStorage.getItem('uf_shared') || '{}'); (SH.ann || []).slice().reverse().forEach(function (a) { D.ann.unshift({ c: 'أكاديمي', t: a.t + ' — ' + a.cn, s: a.dr, d: 0 }); }); (SH.lectures || []).filter(function (l) { return l.pub; }).forEach(function (l) { D.files.unshift({ k: l.k, t: l.t, x: l.x, s: l.sz, d: 0 }); }); } catch (e) {} var LOCK = false; try { LOCK = !!JSON.parse(sessionStorage.getItem('uniflow_user')).locked; } catch (e) {} var st = { ann: 'الكل', files: 'all' }, C = D.courses;
   // أيام الجدول الرسمي: يبدأ من السبت والأحد ثاني الأيام (يوم خالٍ)
   var DAYS = ['السبت', 'الأحد', 'الاثنين', 'الثلاثاء', 'الأربعاء', 'الخميس'];
   var demo = '<span class="demo-badge">بيانات تجريبية</span>';
@@ -55,8 +55,8 @@
     files: function () {
       var L = D.files.filter(function (f) { return st.files === 'all' || f.k === st.files; });
       return hd('الملفات والمستندات') + chips('files', [['all', 'الكل']].concat(C.map(function (c) { return [c.k, c.n]; })), st.files) +
-        '<div class="panel">' + L.map(function (f) { var c = C.filter(function (x) { return x.k === f.k; })[0]; return '<div class="nit file-row"><span class="ni" style="background:#efe7ff;color:#8b5cf6;font-size:11px;font-weight:800">' + f.x + '</span><p dir="ltr" style="text-align:right">' + f.t + '<small>' + c.n + ' · ' + f.s + ' · ' + date(f.d) + '</small></p><button class="btn-s" data-act="dl">تحميل</button></div>'; }).join('') + '</div>' +
-        '<h3 class="sec">مستندات جامعية</h3><div class="panel">' + D.docs.map(function (t) { return '<div class="nit file-row"><span class="ni" style="background:#e1f6e9;color:#22a559"><svg><use href="#file"/></svg></span><p>' + t + '</p><button class="btn-s" data-act="dl">طلب</button></div>'; }).join('') + '</div>';
+        '<div class="panel">' + L.map(function (f) { var c = C.filter(function (x) { return x.k === f.k; })[0]; return '<div class="nit"><span class="ni" style="background:#efe7ff;color:#8b5cf6;font-size:11px;font-weight:800">' + f.x + '</span><p dir="ltr" style="text-align:right">' + f.t + '<small>' + c.n + ' · ' + f.s + ' · ' + date(f.d) + '</small></p><button class="btn-s" data-act="dl">تحميل</button></div>'; }).join('') + '</div>' +
+        '<h3 class="sec">مستندات جامعية</h3><div class="panel">' + D.docs.map(function (t) { return '<div class="nit"><span class="ni" style="background:#e1f6e9;color:#22a559"><svg><use href="#file"/></svg></span><p>' + t + '</p><button class="btn-s" data-act="dl">طلب</button></div>'; }).join('') + '</div>';
     },
     instructors: function () {
       return hd('الدكاترة') + '<div class="gr">' + C.map(function (c) { return card('<h3>' + c.dr + '</h3>', '<p>المقرر: ' + c.n + '</p><p>النوع: ' + c.ty + '</p><p>المكتب والساعات المكتبية: ' + c.office + '</p>'); }).join('') + '</div>';
@@ -75,7 +75,7 @@
       var th = document.documentElement.dataset.theme, g = (function () { try { return localStorage.getItem('uniflow_gender') || u.gender || ''; } catch (e) { return u.gender || ''; } })();
       var b = function (k, v, t, cur) { return '<button data-' + k + '="' + v + '"' + (cur === v ? ' class="on"' : '') + '>' + t + '</button>'; };
       return hd('الإعدادات والملف الشخصي') + '<div class="panel"><h3>الملف الشخصي والمعلومات الأكاديمية</h3><div class="kv"><span>الاسم</span><b>' + (u.name || 'حسين عادل') + '</b><span>الرقم الأكاديمي</span><b>' + (u.id || '202400123') + '</b><span>الكلية</span><b>كلية الحاسبات وتقنية المعلومات</b><span>التخصص</span><b>' + (D.dept ? D.dept.name : 'الأمن السيبراني') + '</b><span>المستوى</span><b>' + (D.dept ? D.dept.level : 'الثاني') + '</b><span>الفصل</span><b>' + (D.dept ? D.dept.term : 'الثاني') + '</b><span>الساعات المنجزة</span><b>' + D.done + ' من ' + D.totalCr + '</b><span>المعدل التراكمي</span><b>' + D.gpa + '</b></div></div>' +
-        '<div class="panel cd2"><h3>الصورة الشخصية</h3><p class="meta">تُحفظ على جهازك فقط.</p><label class="btn-s up">اختيار صورة<input type="file" id="photo" accept="image/*" hidden></label> <button class="btn-s alt" data-act="rmphoto">إزالة الصورة</button><div class="chips">' + b('ge', 'male', 'ذكر', g) + b('ge', 'female', 'أنثى', g) + b('ge', '', 'غير محدد', g) + '</div></div>' +
+        (u.locked ? '<div class="panel cd2"><h3>الصورة الشخصية</h3><p class="meta">تُحدَّد صورتك تلقائياً من بيانات حسابك ولا يمكن تغييرها.</p></div>' : '<div class="panel cd2"><h3>الصورة الشخصية</h3><p class="meta">تُحفظ على جهازك فقط.</p><label class="btn-s up">اختيار صورة<input type="file" id="photo" accept="image/*" hidden></label> <button class="btn-s alt" data-act="rmphoto">إزالة الصورة</button><div class="chips">' + b('ge', 'male', 'ذكر', g) + b('ge', 'female', 'أنثى', g) + b('ge', '', 'غير محدد', g) + '</div></div>') +
         '<div class="panel cd2"><h3>المظهر</h3><div class="chips">' + b('th', 'light', '☀️ نهاري', th) + b('th', 'dark', '🌙 ليلي', th) + '</div></div>' +
         '<div class="panel cd2"><h3>الحساب</h3><button class="btn-s" data-act="logout">تسجيل الخروج</button> <button class="btn-s alt" data-act="reset">إعادة ضبط البيانات التجريبية</button></div>';
     },
@@ -96,12 +96,12 @@
     else if (e.target.closest('[data-act="print"]')) window.print();
     else if (e.target.closest('[data-act="logout"]')) { try { sessionStorage.clear(); } catch (x) {} location.href = 'index.html'; }
     else if (e.target.closest('[data-act="reset"]')) { ['uniflow_read', 'uniflow_avatar', 'uniflow_gender', 'uniflow_quote', 'uniflow_wx'].forEach(lsDel); try { sessionStorage.removeItem('uniflow_chat'); } catch (x) {} location.reload(); }
-    else if (e.target.closest('[data-act="rmphoto"]')) { lsDel('uniflow_avatar'); location.reload(); }
-    else if ((b = e.target.closest('[data-ge]'))) { try { localStorage.setItem('uniflow_gender', b.dataset.ge); } catch (x) {} location.reload(); }
+    else if (!LOCK && e.target.closest('[data-act="rmphoto"]')) { lsDel('uniflow_avatar'); location.reload(); }
+    else if (!LOCK && (b = e.target.closest('[data-ge]'))) { try { localStorage.setItem('uniflow_gender', b.dataset.ge); } catch (x) {} location.reload(); }
     else if ((b = e.target.closest('[data-th]'))) { document.documentElement.dataset.theme = b.dataset.th; try { localStorage.setItem('uniflow_theme', b.dataset.th); } catch (x) {} r(); }
   });
   document.addEventListener('change', function (e) {
-    if (e.target.id !== 'photo' || !e.target.files[0]) return;
+    if (LOCK || e.target.id !== 'photo' || !e.target.files[0]) return;
     var fr = new FileReader(); fr.onload = function () {
       var im = new Image(); im.onload = function () {
         var c = document.createElement('canvas'), s = Math.min(im.width, im.height); c.width = c.height = 256;
