@@ -16,7 +16,7 @@
     return '<svg viewBox="0 0 56 56" aria-hidden="true" focusable="false">' +
       '<path d="M16 5h16l14 14v29a4 4 0 0 1-4 4H16a4 4 0 0 1-4-4V9a4 4 0 0 1 4-4Z" class="file-icon-paper"/>' +
       '<path d="M32 5v11a3 3 0 0 0 3 3h11" class="file-icon-fold"/>' +
-      '<text x="28" y="35" text-anchor="middle" class="file-icon-text">' + label + '</text>' +
+      '<text x="28" y="32" text-anchor="middle" class="file-icon-text">' + label + '</text>' +
       '</svg>';
   }
 
