@@ -172,3 +172,9 @@ input,button,select,textarea{
 }
 @media (max-width:360px){.field-box,.btn{height:54px}.brand-text strong{font-size:1.9rem}}
 @media (prefers-reduced-motion:reduce){*{transition:none!important}}
+
+/* تذييل الحقوق في صفحة الدخول */
+.site-credit{display:flex;align-items:center;justify-content:center;flex-wrap:wrap;gap:4px 14px;margin:22px 0 0;padding:14px 4px 0;border-top:1px solid var(--line,#e5eaf3);color:var(--muted,#718096);font-size:12px;line-height:1.8;text-align:center}
+.site-credit-dev{color:var(--ink,#263653)}
+.site-credit-dev strong{color:var(--royal,#2563eb);font-weight:800}
+.site-credit-copy{font-size:11.5px}
